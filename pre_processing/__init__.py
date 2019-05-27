@@ -1,8 +1,7 @@
 import json
-import nltk
 
 from pre_processing.text_pre_processor import remove_special_characters, remove_punctuation, remove_accents, \
-    replace_numbers
+    replace_numbers, remove_stopwords, separete_numbers, separete_words, roman_to_int
 
 # Carregando corpus não tratado
 with open('data/processos.json') as processo:
@@ -17,12 +16,18 @@ corpus_lower = []
 for i in corpus_raw:
     corpus_lower.append(i.lower())
 
-corpus = remove_special_characters(corpus_lower)
+corpus = separete_words(corpus_lower)
+corpus = separete_numbers(corpus)
+corpus = remove_special_characters(corpus)
+
+corpus_without_romans = []
+for i in corpus:
+    wordlist = []
+    for j in i:
+        wordlist.append(roman_to_int(j))
+    corpus_without_romans.append(wordlist)
+
+corpus = replace_numbers(corpus)
 corpus = remove_punctuation(corpus)
 corpus = remove_accents(corpus)
-corpus = replace_numbers(corpus)
-
-nltk_corpus = []
-for i in corpus:
-    nltk_corpus.append(nltk.corpus)
-
+corpus = remove_stopwords(corpus)
