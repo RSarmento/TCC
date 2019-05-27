@@ -1,18 +1,28 @@
 import json
+import nltk
 
-# Populating corpus
+from pre_processing.text_pre_processor import remove_special_characters, remove_punctuation, remove_accents, \
+    replace_numbers
 
-from pre_processing.remover import remove_special_characters
-
+# Carregando corpus não tratado
 with open('data/processos.json') as processo:
-    data = json.load(processo)
+    corpus = json.load(processo)
 
-# Colecting every word in the data file
-corpus = []
-for i in data:
+corpus_raw = []
+for i in corpus:
     for j in i["elementos"]["Ementa"]:
-        for k in j:
-            corpus.append(k)
+        corpus_raw.append(j)
 
-corpus_withou_specials = remove_special_characters(corpus)
+corpus_lower = []
+for i in corpus_raw:
+    corpus_lower.append(i.lower())
+
+corpus = remove_special_characters(corpus_lower)
+corpus = remove_punctuation(corpus)
+corpus = remove_accents(corpus)
+corpus = replace_numbers(corpus)
+
+nltk_corpus = []
+for i in corpus:
+    nltk_corpus.append(nltk.corpus)
 
