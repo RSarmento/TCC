@@ -1,7 +1,9 @@
-from unicodedata import normalize
-from string import punctuation
-from nltk.corpus import stopwords
 import re
+from string import punctuation
+from unicodedata import normalize
+import romanclass
+
+from nltk.corpus import stopwords
 
 
 def remove_accents(corpus):
@@ -60,15 +62,22 @@ def remove_stopwords(corpus):
     return text_without_stopwords
 
 
-def roman_to_int(number):
-    rom_val = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
-    int_val = 0
-    for i in range(len(number)):
-        if i > 0 and rom_val[number[i]] > rom_val[number[i - 1]]:
-            int_val += rom_val[number[i]] - 2 * rom_val[number[i - 1]]
-        else:
-            int_val += rom_val[number[i]]
-    return int_val
+def roman_to_int(corpus):
+    roman = ["MMM", "MM", "M",
+             "CM", "DCCC", "DCC", "DC", "D", "CD", "CCC", "CC", "C",
+             "XC", "LXXX", "LXX", "LX", "L", "XL", "XXX", "XX", "X",
+             "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"]
+    new_corpus = []
+    for i in corpus:
+        wordlist = []
+        for j in i:
+            if j in roman:
+                wordlist.append(romanclass.fromRoman(j))
+            else:
+                wordlist.append(j)
+        new_corpus.append(wordlist)
+
+    return new_corpus
 
 
 def separete_numbers(corpus):
