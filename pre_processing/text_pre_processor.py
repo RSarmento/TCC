@@ -16,6 +16,18 @@ def remove_accents(corpus):
     return text_without_accents
 
 
+def remove_blanks(corpus):
+    text_without_blanks = []
+    for i in corpus:
+        wordlist = []
+        for j in i:
+            if j != '':
+                print(j)
+                wordlist.append(j)
+        text_without_blanks.append(wordlist)
+    return text_without_blanks
+
+
 def replace_numbers(corpus):
     text_without_numbers = []
     pattern = re.compile(r'\d+')
@@ -72,7 +84,7 @@ def roman_to_int(corpus):
         wordlist = []
         for j in i:
             if j in roman:
-                wordlist.append(romanclass.fromRoman(j))
+                wordlist.append(str(romanclass.fromRoman(j)))
             else:
                 wordlist.append(j)
         new_corpus.append(wordlist)
