@@ -6,6 +6,14 @@ import romanclass
 from nltk.corpus import stopwords
 
 
+def extract(data):
+    corpus = []
+    for i in data:
+        for j in i["elementos"]["Ementa"]:
+            corpus.append(j)
+    return corpus
+
+
 def remove_accents(corpus):
     text_without_accents = []
     for i in corpus:
@@ -22,7 +30,6 @@ def remove_blanks(corpus):
         wordlist = []
         for j in i:
             if j != '':
-                print(j)
                 wordlist.append(j)
         text_without_blanks.append(wordlist)
     return text_without_blanks
@@ -108,8 +115,21 @@ def separete_numbers(corpus):
 def separete_words(corpus):
     text_separete_words = []
     for i in corpus:
-        text_separete_words.append(i.split())
+        wordlist = []
+        for j in i.split():
+            wordlist.append(''.join([c for c in j if c not in punctuation]))
+        text_separete_words.append(wordlist)
     return text_separete_words
+
+
+def to_lower(corpus):
+    lower = []
+    for i in corpus:
+        wordlist = []
+        for j in i:
+            wordlist.append(j.lower())
+        lower.append(wordlist)
+    return lower
 
 
 class PreProcessor:
