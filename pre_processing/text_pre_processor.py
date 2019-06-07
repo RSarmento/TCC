@@ -1,6 +1,9 @@
 import re
 from string import punctuation
 from unicodedata import normalize
+from nltk import RSLPStemmer
+
+import nltk
 import romanclass
 
 from nltk.corpus import stopwords
@@ -71,9 +74,8 @@ def remove_stopwords(corpus):
     pt_stopwords = stopwords.words('portuguese')
 
     for i in corpus:
-        splited_string = i.split()
         wordlist = []
-        for j in splited_string:
+        for j in i:
             if j not in pt_stopwords:
                 wordlist.append(j)
         text_without_stopwords.append(wordlist)
@@ -120,6 +122,20 @@ def separete_words(corpus):
             wordlist.append(''.join([c for c in j if c not in punctuation]))
         text_separete_words.append(wordlist)
     return text_separete_words
+
+
+def stemming(corpus):
+    stemmed_corpus = []
+    stemmer = nltk.stem.RSLPStemmer()
+    for i in corpus:
+        wordlist = []
+        for j in i:
+            if j.__len__() == 0:
+                wordlist.append(j)
+            else:
+                wordlist.append(stemmer.stem(j))
+        stemmed_corpus.append(wordlist)
+    return stemmed_corpus
 
 
 def to_lower(corpus):
