@@ -3,11 +3,11 @@ from sklearn import model_selection, preprocessing
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
-def classify(ementasProcess, acordaosProcess):
+def classify(ementas_process, acordaos_process):
     # carregando ementas e acórdãos
     train_df = pandas.DataFrame()
-    train_df['text'] = ementasProcess
-    train_df['label'] = acordaosProcess
+    train_df['text'] = ementas_process
+    train_df['label'] = acordaos_process
 
     # split the dataset into training and validation datasets
     train_x, valid_x, train_y, valid_y = model_selection.train_test_split(train_df['text'], train_df['label'])
