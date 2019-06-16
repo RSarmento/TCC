@@ -9,14 +9,6 @@ import romanclass
 from nltk.corpus import stopwords
 
 
-def extract(data):
-    corpus = []
-    for i in data:
-        for j in i["elementos"]["Ementa"]:
-            corpus.append(j)
-    return corpus
-
-
 def remove_accents(corpus):
     text_without_accents = []
     for i in corpus:
@@ -146,6 +138,27 @@ def to_lower(corpus):
             wordlist.append(j.lower())
         lower.append(wordlist)
     return lower
+
+
+def init(corpus):
+    corpus = separete_words(corpus)
+    corpus = separete_numbers(corpus)
+    corpus = remove_special_characters(corpus)
+    corpus = roman_to_int(corpus)
+    corpus = to_lower(corpus)
+    corpus = replace_numbers(corpus)
+    corpus = remove_punctuation(corpus)
+    corpus = remove_blanks(corpus)
+    corpus = remove_stopwords(corpus)
+    corpus = remove_accents(corpus)
+    corpus = stemming(corpus)
+    return corpus
+
+
+# Método que vai ser transferido para classe de processamento em sí
+def dictionary(corpus):
+    dictio = []
+    return dictio
 
 
 class PreProcessor:
