@@ -1,22 +1,32 @@
 import json
 
-from pre_processing.text_pre_processor import init, dictionary
+from pre_processing.text_pre_processor import init, dictionary, stringify
 
 # Carregando corpus não tratado
-with open('../data/processos.json') as processo:
+from sentiment_analysis.sentimental import sentiment
+from text_classifier.classifier import classify
+
+with open('../data/output.json') as processo:
     data = json.load(processo)
 
 ementas = []
 acordaos = []
 
+# respeitar
 for i in data:
+    ementa = []
     for j in i["elementos"]["Ementa"]:
-        ementas.append(j)
+        ementa.append(j)
+    ementas.append(' '.join(ementa))
 
 for i in data:
     for j in i["elementos"]["Acórdão"]:
         acordaos.append(j)
 
 ementasProcess = init(ementas)
+ementasProcess = stringify(ementasProcess)
 acordaosProcess = init(acordaos)
-dictionary = dictionary(ementasProcess.extend(acordaosProcess))
+
+acordaos_boos = sentiment(acordaosProcess)
+classify(ementasProcess, acordaos_boos)
+

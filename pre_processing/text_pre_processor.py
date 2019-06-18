@@ -140,6 +140,14 @@ def to_lower(corpus):
     return lower
 
 
+def stringify(corpus):
+    stringified_corpus = []
+    for i in corpus:
+        stringified_corpus.append(' '.join(i))
+    return stringified_corpus
+
+
+# aplicar padrão builder e/ou otimizar os loops
 def init(corpus):
     corpus = separete_words(corpus)
     corpus = separete_numbers(corpus)
