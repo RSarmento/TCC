@@ -1,12 +1,9 @@
 import numpy
 import pandas
-import string
-import textblob
-import xgboost
 from keras import layers, models, optimizers
 from keras.preprocessing import text, sequence
 from sklearn import decomposition, ensemble
-from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm
+from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
@@ -38,7 +35,7 @@ def create_model_architecture(input_size):
     return classifier
 
 
-def create_cnn():
+def create_cnn(word_index, embedding_matrix):
     # Add an Input Layer
     input_layer = layers.Input((70,))
 
@@ -65,7 +62,7 @@ def create_cnn():
     return model
 
 
-def create_rnn_lstm():
+def create_rnn_lstm(word_index, embedding_matrix):
     # Add an Input Layer
     input_layer = layers.Input((70,))
 
@@ -89,7 +86,7 @@ def create_rnn_lstm():
     return model
 
 
-def create_rnn_gru():
+def create_rnn_gru(word_index, embedding_matrix):
     # Add an Input Layer
     input_layer = layers.Input((70,))
 
@@ -113,7 +110,7 @@ def create_rnn_gru():
     return model
 
 
-def create_bidirectional_rnn():
+def create_bidirectional_rnn(word_index, embedding_matrix):
     # Add an Input Layer
     input_layer = layers.Input((70,))
 
@@ -137,7 +134,7 @@ def create_bidirectional_rnn():
     return model
 
 
-def create_rcnn():
+def create_rcnn(word_index, embedding_matrix):
     # Add an Input Layer
     input_layer = layers.Input((70,))
 
@@ -209,6 +206,20 @@ def classify(ementas_process, acordaos_process):
     xvalid_tfidf_ngram_chars = tfidf_vect_ngram_chars.transform(valid_x)
 
     # load the pre-trained word-embedding vectors
+    # nesse carregamento de vetor, verificar como passar o texto das ementas
+    #
+    # A word embedding is a form of representing words and documents using a dense vector representation. The
+    # position of a word within the vector space is learned from text and is based on the words that surround the
+    # word when it is used. Word embeddings can be trained using the input corpus itself or can be generated using
+    # pre-trained word embeddings such as Glove, FastText, and Word2Vec. Any one of them can be downloaded and used
+    # as transfer learning. One can read more about word embeddings here.
+    #
+    # Following snnipet shows how to use pre-trained word embeddings in the model. There are four essential steps:
+    #
+    # Loading the pretrained word embeddings
+    # Creating a tokenizer object
+    # Transforming text documents to sequence of tokens and pad them
+    # Create a mapping of token and their respective embeddings
     embeddings_index = {}
     for i, line in enumerate(open('data/wiki-news-300d-1M.vec')):
         values = line.split()
@@ -216,7 +227,7 @@ def classify(ementas_process, acordaos_process):
 
     # create a tokenizer
     token = text.Tokenizer()
-    token.fit_on_texts(trainDF['text'])
+    token.fit_on_texts(train_df['text'])
     word_index = token.word_index
 
     # convert text to sequence of tokens and pad them to ensure equal length vectors
@@ -230,9 +241,9 @@ def classify(ementas_process, acordaos_process):
         if embedding_vector is not None:
             embedding_matrix[i] = embedding_vector
 
-    trainDF['char_count'] = trainDF['text'].apply(len)
-    trainDF['word_count'] = trainDF['text'].apply(lambda x: len(x.split()))
-    trainDF['word_density'] = trainDF['char_count'] / (trainDF['word_count'] + 1)
+    train_df['char_count'] = train_df['text'].apply(len)
+    train_df['word_count'] = train_df['text'].apply(lambda x: len(x.split()))
+    train_df['word_density'] = train_df['char_count'] / (train_df['word_count'] + 1)
 
     # train a LDA Model
     lda_model = decomposition.LatentDirichletAllocation(n_components=20, learning_method='online', max_iter=20)
@@ -292,22 +303,22 @@ def classify(ementas_process, acordaos_process):
     accuracy = train_model(classifier, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, is_neural_net=True)
     print("NN, Ngram Level TF IDF Vectors", accuracy)
 
-    classifier = create_cnn()
+    classifier = create_cnn(word_index, embedding_matrix)
     accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
     print("CNN, Word Embeddings", accuracy)
 
-    classifier = create_rnn_lstm()
+    classifier = create_rnn_lstm(word_index, embedding_matrix)
     accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
     print("RNN-LSTM, Word Embeddings", accuracy)
 
-    classifier = create_rnn_gru()
+    classifier = create_rnn_gru(word_index, embedding_matrix)
     accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
     print("RNN-GRU, Word Embeddings", accuracy)
 
-    classifier = create_bidirectional_rnn()
+    classifier = create_bidirectional_rnn(word_index, embedding_matrix)
     accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
     print("RNN-Bidirectional, Word Embeddings", accuracy)
 
     classifier = create_rcnn()
     accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
-    print("CNN, Word Embeddings",  accuracy)
+    print("CNN, Word Embeddings", accuracy)
