@@ -170,4 +170,10 @@ def dictionary(corpus):
 
 
 class PreProcessor:
+    def __init__(self, corpus):
+        self.corpus = corpus
+
+    def __str__(self):
+        return self.corpus
+
     pass
