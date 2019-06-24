@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 
 
 class Processor:
+
     def __init__(self, corpus):
         self.corpus = corpus
 
@@ -146,17 +147,17 @@ class Processor:
         return self
 
     def process(self):
-        return self\
-            .separete_words()\
-            .separete_numbers()\
-            .remove_special_characters()\
-            .roman_to_int()\
-            .to_lower()\
-            .replace_numbers()\
-            .remove_punctuation()\
-            .remove_blanks()\
-            .remove_stopwords()\
-            .remove_accents()\
+        return self \
+            .separete_words() \
+            .separete_numbers() \
+            .remove_special_characters() \
+            .roman_to_int() \
+            .to_lower() \
+            .replace_numbers() \
+            .remove_punctuation() \
+            .remove_blanks() \
+            .remove_stopwords() \
+            .remove_accents() \
             .stemming()
 
     pass

@@ -1,5 +1,6 @@
 import json
 
+from pre_processing.processor import Processor
 from pre_processing.text_pre_processor import init, dictionary, stringify
 
 # Carregando corpus não tratado
@@ -23,7 +24,8 @@ for i in data:
     for j in i["elementos"]["Acórdão"]:
         acordaos.append(j)
 
-ementasProcess = init(ementas)
+# ementasProcess = init(ementas)
+ementasProcess = Processor(ementas)
 ementasProcess = stringify(ementasProcess)
 acordaosProcess = init(acordaos)
 

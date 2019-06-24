@@ -1,7 +1,6 @@
 import re
 from string import punctuation
 from unicodedata import normalize
-from nltk import RSLPStemmer
 
 import nltk
 import romanclass
