@@ -1,3 +1,4 @@
+import gensim as gensim
 import numpy
 import pandas
 from keras import layers, models, optimizers
@@ -164,7 +165,7 @@ def create_rcnn(word_index, embedding_matrix):
     return model
 
 
-def classify(ementas_process, acordaos_process):
+def classify(ementas_process, acordaos_process, model):
     # carregando ementas e acórdãos
     train_df = pandas.DataFrame()
     train_df['text'] = ementas_process
@@ -220,9 +221,11 @@ def classify(ementas_process, acordaos_process):
     # Creating a tokenizer object
     # Transforming text documents to sequence of tokens and pad them
     # Create a mapping of token and their respective embeddings
+    # see link https://www.analyticsvidhya.com/blog/2017/06/word-embeddings-count-word2veec/
+
     embeddings_index = {}
-    for i, line in enumerate(open('data/wiki-news-300d-1M.vec')):
-        values = line.split()
+    for i in ementas_process:
+        values = i.split()
         embeddings_index[values[0]] = numpy.asarray(values[1:], dtype='float32')
 
     # create a tokenizer
