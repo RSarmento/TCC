@@ -146,6 +146,13 @@ class Processor:
         self.corpus = stemmed_corpus
         return self
 
+    def stringify(self):
+        stringified_corpus = []
+        for i in self.corpus:
+            stringified_corpus.append(' '.join(i))
+        self.corpus = stringified_corpus
+        return self
+
     def process(self):
         return self \
             .separete_words() \

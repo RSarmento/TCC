@@ -26,9 +26,10 @@ for i in data:
 
 # ementasProcess = init(ementas)
 ementasProcess = Processor(ementas)
-ementasProcess = stringify(ementasProcess)
-acordaosProcess = init(acordaos)
+acordaosProcess = Processor(acordaos)
 
-acordaos_boos = sentiment(acordaosProcess)
-classify(ementasProcess, acordaos_boos)
+ementasProcess.process().stringify()
+
+acordaos_boos = sentiment(acordaosProcess.corpus)
+classify(ementasProcess.corpus, acordaos_boos)
 

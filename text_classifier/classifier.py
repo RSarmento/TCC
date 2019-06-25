@@ -7,7 +7,7 @@ from sklearn import model_selection, preprocessing, linear_model, naive_bayes, m
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 
-def train_model(classifier, feature_vector_train, label, feature_vector_valid, is_neural_net=False):
+def train_model(classifier, feature_vector_train, label, feature_vector_valid, valid_y,is_neural_net=False):
     # fit the training dataset on the classifier
     classifier.fit(feature_vector_train, label)
 
@@ -247,7 +247,7 @@ def classify(ementas_process, acordaos_process):
 
     # train a LDA Model
     lda_model = decomposition.LatentDirichletAllocation(n_components=20, learning_method='online', max_iter=20)
-    X_topics = lda_model.fit_transform(xtrain_count)
+    x_topics = lda_model.fit_transform(xtrain_count)
     topic_word = lda_model.components_
     vocab = count_vect.get_feature_names()
 
@@ -259,66 +259,66 @@ def classify(ementas_process, acordaos_process):
         topic_summaries.append(' '.join(topic_words))
 
     # Naive Bayes on Count Vectors
-    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count)
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count, valid_y)
     print("NB, Count Vectors: ", accuracy)
 
     # Naive Bayes on Word Level TF IDF Vectors
-    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf)
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
     print("NB, WordLevel TF-IDF: ", accuracy)
 
     # Naive Bayes on Ngram Level TF IDF Vectors
-    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
     print("NB, N-Gram Vectors: ", accuracy)
 
     # Naive Bayes on Character Level TF IDF Vectors
-    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars)
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars, valid_y)
     print("NB, CharLevel Vectors: ", accuracy)
 
     # Linear Classifier on Count Vectors
-    accuracy = train_model(linear_model.LogisticRegression(), xtrain_count, train_y, xvalid_count)
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_count, train_y, xvalid_count, valid_y)
     print("LR, Count Vectors: ", accuracy)
 
     # Linear Classifier on Word Level TF IDF Vectors
-    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf, train_y, xvalid_tfidf)
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
     print("LR, WordLevel TF-IDF: ", accuracy)
 
     # Linear Classifier on Ngram Level TF IDF Vectors
-    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram)
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
     print("LR, N-Gram Vectors: ", accuracy)
 
     # Linear Classifier on Character Level TF IDF Vectors
     accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram_chars, train_y,
-                           xvalid_tfidf_ngram_chars)
+                           xvalid_tfidf_ngram_chars, valid_y)
     print("LR, CharLevel Vectors: ", accuracy)
 
     # RF on Count Vectors
-    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_count, train_y, xvalid_count)
+    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_count, train_y, xvalid_count, valid_y)
     print("RF, Count Vectors: ", accuracy)
 
     # RF on Word Level TF IDF Vectors
-    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_tfidf, train_y, xvalid_tfidf)
+    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
     print("RF, WordLevel TF-IDF: ", accuracy)
 
     classifier = create_model_architecture(xtrain_tfidf_ngram.shape[1])
-    accuracy = train_model(classifier, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, is_neural_net=True)
+    accuracy = train_model(classifier, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y, is_neural_net=True)
     print("NN, Ngram Level TF IDF Vectors", accuracy)
 
     classifier = create_cnn(word_index, embedding_matrix)
-    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
     print("CNN, Word Embeddings", accuracy)
 
     classifier = create_rnn_lstm(word_index, embedding_matrix)
-    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
     print("RNN-LSTM, Word Embeddings", accuracy)
 
     classifier = create_rnn_gru(word_index, embedding_matrix)
-    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
     print("RNN-GRU, Word Embeddings", accuracy)
 
     classifier = create_bidirectional_rnn(word_index, embedding_matrix)
-    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
     print("RNN-Bidirectional, Word Embeddings", accuracy)
 
     classifier = create_rcnn()
-    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, is_neural_net=True)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
     print("CNN, Word Embeddings", accuracy)
