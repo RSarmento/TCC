@@ -1,5 +1,6 @@
 # training word2vec on 3 sentences
 import gensim
+from gensim.corpora import dictionary
 
 
 def trainer(corpus):
@@ -16,3 +17,10 @@ def word_counter(corpus):
             unique.add(j)
 
     return len(unique)
+
+
+def lda_model(corpus):
+    doc_term_matrix = [dictionary.doc2bow(doc) for doc in corpus]
+    lda = gensim.models.ldamodel.LdaModel
+    return lda(doc_term_matrix, num_topics=3, id2word=dictionary, passes=50)
+

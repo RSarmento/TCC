@@ -206,7 +206,7 @@ def classify(ementas_process, acordaos_process, model):
     xtrain_tfidf_ngram_chars = tfidf_vect_ngram_chars.transform(train_x)
     xvalid_tfidf_ngram_chars = tfidf_vect_ngram_chars.transform(valid_x)
 
-    # load the pre-trained word-embedding vectors
+    ''' load the pre-trained word-embedding vectors
     # nesse carregamento de vetor, verificar como passar o texto das ementas
     #
     # A word embedding is a form of representing words and documents using a dense vector representation. The
@@ -223,32 +223,8 @@ def classify(ementas_process, acordaos_process, model):
     # Create a mapping of token and their respective embeddings
     # see link https://www.analyticsvidhya.com/blog/2017/06/word-embeddings-count-word2veec/
 
-    embeddings_index = {}
-    for i in ementas_process:
-        values = i.split()
-        embeddings_index[values[0]] = numpy.asarray(values[1:], dtype='float32')
-
-    # create a tokenizer
-    token = text.Tokenizer()
-    token.fit_on_texts(train_df['text'])
-    word_index = token.word_index
-
-    # convert text to sequence of tokens and pad them to ensure equal length vectors
-    train_seq_x = sequence.pad_sequences(token.texts_to_sequences(train_x), maxlen=70)
-    valid_seq_x = sequence.pad_sequences(token.texts_to_sequences(valid_x), maxlen=70)
-
-    # create token-embedding mapping
-    embedding_matrix = numpy.zeros((len(word_index) + 1, 300))
-    for word, i in word_index.items():
-        embedding_vector = embeddings_index.get(word)
-        if embedding_vector is not None:
-            embedding_matrix[i] = embedding_vector
-
-    train_df['char_count'] = train_df['text'].apply(len)
-    train_df['word_count'] = train_df['text'].apply(lambda x: len(x.split()))
-    train_df['word_density'] = train_df['char_count'] / (train_df['word_count'] + 1)
-
     # train a LDA Model
+    '''
     lda_model = decomposition.LatentDirichletAllocation(n_components=20, learning_method='online', max_iter=20)
     x_topics = lda_model.fit_transform(xtrain_count)
     topic_word = lda_model.components_
