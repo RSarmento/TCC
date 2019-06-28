@@ -165,7 +165,7 @@ def create_rcnn(word_index, embedding_matrix):
     return model
 
 
-def classify(ementas_process, acordaos_process, model):
+def classify(ementas_process, acordaos_process):
     # carregando ementas e acórdãos
     train_df = pandas.DataFrame()
     train_df['text'] = ementas_process

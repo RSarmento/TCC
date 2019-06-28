@@ -24,17 +24,17 @@ for i in data:
 for i in data:
     for j in i["elementos"]["Acórdão"]:
         acordaos.append(j)
-
+#
 ementasProcess = Processor(ementas)
 ementasProcess.process()
 
 acordaosProcess = Processor(acordaos)
 acordaosProcess.process()
 
-corpus = ementasProcess.corpus + acordaosProcess.corpus
-model = trainer(corpus)
+# corpus = ementasProcess.corpus + acordaosProcess.corpus
+# model = trainer(corpus)
 
-ementasProcess.process().stringify()
+ementasProcess.stringify()
 acordaos_boos = sentiment(acordaosProcess.corpus)
-classify(ementasProcess.corpus, acordaos_boos, model)
+classify(ementasProcess.corpus, acordaos_boos)
 
