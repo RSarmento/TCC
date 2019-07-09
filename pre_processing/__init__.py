@@ -33,7 +33,7 @@ acordaos_boos = sentiment(acordaosProcess.corpus)
 tabela = {'resultado': acordaos_boos, 'ementa': ementas}
 
 df = pd.DataFrame(tabela, columns=['resultado', 'ementa'])
-export_csv = df.to_csv(r'ementas_acordaos', index=None, header=False)
+export_csv = df.to_csv(r'ementas_acordaos', sep='\t', index=None, header=False)
 
 # ementasProcess = Processor(ementas)
 # ementasProcess.process()

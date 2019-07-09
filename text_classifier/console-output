@@ -1,0 +1,55 @@
+/usr/bin/python3.7 /usr/share/pycharm/helpers/pydev/pydevd.py --multiproc --qt-support=auto --client 127.0.0.1 --port 38591 --file /home/rivo/tcc/pre_processing/__init__.py
+pydev debugger: process 21927 is connecting
+
+Connected to pydev debugger (build 183.5429.31)
+Using TensorFlow backend.
+NB, Count Vectors:  0.8040201005025126
+NB, WordLevel TF-IDF:  0.7386934673366834
+NB, N-Gram Vectors:  0.8391959798994975
+NB, CharLevel Vectors:  0.6733668341708543
+/usr/lib/python3.7/site-packages/sklearn/linear_model/logistic.py:432: FutureWarning: Default solver will be changed to 'lbfgs' in 0.22. Specify a solver to silence this warning.
+  FutureWarning)
+LR, Count Vectors:  0.864321608040201
+LR, WordLevel TF-IDF:  0.8341708542713567
+LR, N-Gram Vectors:  0.8592964824120602
+LR, CharLevel Vectors:  0.8391959798994975
+/usr/lib/python3.7/site-packages/sklearn/ensemble/forest.py:245: FutureWarning: The default value of n_estimators will change from 10 in version 0.20 to 100 in 0.22.
+  "10 in version 0.20 to 100 in 0.22.", FutureWarning)
+RF, Count Vectors:  0.8442211055276382
+/usr/lib/python3.7/site-packages/sklearn/ensemble/forest.py:245: FutureWarning: The default value of n_estimators will change from 10 in version 0.20 to 100 in 0.22.
+  "10 in version 0.20 to 100 in 0.22.", FutureWarning)
+RF, WordLevel TF-IDF:  0.8040201005025126
+WARNING: Logging before flag parsing goes to stderr.
+W0707 16:39:30.485439 140112986916352 deprecation_wrapper.py:119] From /usr/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:74: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+W0707 16:39:30.674962 140112986916352 deprecation_wrapper.py:119] From /usr/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:515: The name tf.sparse_placeholder is deprecated. Please use tf.compat.v1.sparse_placeholder instead.
+
+W0707 16:39:30.795171 140112986916352 deprecation_wrapper.py:119] From /usr/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:4138: The name tf.random_uniform is deprecated. Please use tf.random.uniform instead.
+
+W0707 16:39:31.127816 140112986916352 deprecation_wrapper.py:119] From /usr/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:1083: The name tf.sparse_tensor_dense_matmul is deprecated. Please use tf.sparse.sparse_dense_matmul instead.
+
+W0707 16:39:32.064547 140112986916352 deprecation_wrapper.py:119] From /usr/lib/python3.7/site-packages/keras/optimizers.py:790: The name tf.train.Optimizer is deprecated. Please use tf.compat.v1.train.Optimizer instead.
+
+W0707 16:39:32.069384 140112986916352 deprecation_wrapper.py:119] From /usr/lib/python3.7/site-packages/keras/backend/tensorflow_backend.py:517: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.
+
+W0707 16:39:32.311573 140112986916352 deprecation.py:323] From /usr/lib/python3.7/site-packages/tensorflow/python/ops/nn_impl.py:180: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+Epoch 1/1
+2019-07-07 16:39:47.090681: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-07-07 16:39:47.377129: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 1800000000 Hz
+2019-07-07 16:39:47.378620: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55c7104e7d20 executing computations on platform Host. Devices:
+2019-07-07 16:39:47.378671: I tensorflow/compiler/xla/service/service.cc:175]   StreamExecutor device (0): <undefined>, <undefined>
+2019-07-07 16:39:48.429378: W tensorflow/compiler/jit/mark_for_compilation_pass.cc:1412] (One-time warning): Not using XLA:CPU for cluster because envvar TF_XLA_FLAGS=--tf_xla_cpu_global_jit was not set.  If you want XLA:CPU, either set that envvar, or use experimental_jit_scope to enable XLA:CPU.  To confirm that XLA is active, pass --vmodule=xla_compilation_cache=1 (as a proper command-line flag, not via TF_XLA_FLAGS) or set the envvar XLA_FLAGS=--xla_hlo_profile.
+
+ 32/594 [>.............................] - ETA: 33s - loss: 0.6936
+ 96/594 [===>..........................] - ETA: 10s - loss: 0.6928
+160/594 [=======>......................] - ETA: 5s - loss: 0.6896
+224/594 [==========>...................] - ETA: 3s - loss: 0.6867
+288/594 [=============>................] - ETA: 2s - loss: 0.6834
+352/594 [================>.............] - ETA: 1s - loss: 0.6811
+416/594 [====================>.........] - ETA: 0s - loss: 0.6779
+480/594 [=======================>......] - ETA: 0s - loss: 0.6756
+544/594 [==========================>...] - ETA: 0s - loss: 0.6732
+594/594 [==============================] - 3s 4ms/step - loss: 0.6706
+NN, Ngram Level TF IDF Vectors 0.592964824120603
