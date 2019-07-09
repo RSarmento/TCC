@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 
 from pre_processing.processor import Processor
 from pre_processing.text_pre_processor import init, dictionary, stringify
@@ -24,17 +25,21 @@ for i in data:
 for i in data:
     for j in i["elementos"]["Acórdão"]:
         acordaos.append(j)
-#
-ementasProcess = Processor(ementas)
-ementasProcess.process()
 
 acordaosProcess = Processor(acordaos)
 acordaosProcess.process()
+acordaos_boos = sentiment(acordaosProcess.corpus)
+
+tabela = {'resultado': acordaos_boos, 'ementa': ementas}
+
+df = pd.DataFrame(tabela, columns=['resultado', 'ementa'])
+export_csv = df.to_csv(r'ementas_acordaos', index=None, header=False)
+
+# ementasProcess = Processor(ementas)
+# ementasProcess.process()
 
 # corpus = ementasProcess.corpus + acordaosProcess.corpus
 # model = trainer(corpus)
+# ementasProcess.stringify()
 
-ementasProcess.stringify()
-acordaos_boos = sentiment(acordaosProcess.corpus)
-classify(ementasProcess.corpus, acordaos_boos)
-
+# classify(ementasProcess.corpus, acordaos_boos)
