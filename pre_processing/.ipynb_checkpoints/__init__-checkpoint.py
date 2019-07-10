@@ -30,13 +30,14 @@ acordaosProcess = Processor(acordaos)
 acordaosProcess.process()
 acordaos_boos = sentiment(acordaosProcess.corpus)
 
-ementasProcess = Processor(ementas)
-ementasProcess.process().stringify()
-
-tabela = {'resultado': acordaos_boos, 'ementa': ementasProcess.corpus}
+tabela = {'resultado': acordaos_boos, 'ementa': ementas}
 
 df = pd.DataFrame(tabela, columns=['resultado', 'ementa'])
 export_csv = df.to_csv(r'ementas_acordaos', sep='\t', index=None, header=False)
+
+# ementasProcess = Processor(ementas)
+# ementasProcess.process()
+
 # corpus = ementasProcess.corpus + acordaosProcess.corpus
 # model = trainer(corpus)
 # ementasProcess.stringify()
