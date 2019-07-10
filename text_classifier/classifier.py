@@ -1,0 +1,147 @@
+import numpy
+import pandas
+from sklearn import decomposition, ensemble
+from sklearn import model_selection, preprocessing, linear_model, naive_bayes
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+
+from text_classifier.model_building import train_model, create_model_architecture, create_cnn, create_rnn_lstm, \
+    create_rnn_gru, create_bidirectional_rnn, create_rcnn
+
+
+def classify(ementas_process, acordaos_process):
+    # carregando ementas e acórdãos
+    train_df = pandas.DataFrame()
+    train_df['text'] = ementas_process
+    train_df['label'] = acordaos_process
+
+    # split the dataset into training and validation datasets
+    train_x, valid_x, train_y, valid_y = model_selection.train_test_split(train_df['text'], train_df['label'])
+
+    # label encode the target variable
+    encoder = preprocessing.LabelEncoder()
+    train_y = encoder.fit_transform(train_y)
+    valid_y = encoder.fit_transform(valid_y)
+
+    # create a count vectorizer object
+    count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
+    count_vect.fit(train_df['text'])
+
+    # transform the training and validation data using count vectorizer object
+    xtrain_count = count_vect.transform(train_x)
+    xvalid_count = count_vect.transform(valid_x)
+
+    # word level tf-idf
+    tfidf_vect = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', max_features=5000)
+    tfidf_vect.fit(train_df['text'])
+    xtrain_tfidf = tfidf_vect.transform(train_x)
+    xvalid_tfidf = tfidf_vect.transform(valid_x)
+
+    # ngram level tf-idf
+    tfidf_vect_ngram = TfidfVectorizer(analyzer='word', token_pattern=r'\w{1,}', ngram_range=(2, 3), max_features=5000)
+    tfidf_vect_ngram.fit(train_df['text'])
+    xtrain_tfidf_ngram = tfidf_vect_ngram.transform(train_x)
+    xvalid_tfidf_ngram = tfidf_vect_ngram.transform(valid_x)
+
+    # characters level tf-idf
+    tfidf_vect_ngram_chars = TfidfVectorizer(analyzer='char', token_pattern=r'\w{1,}', ngram_range=(2, 3),
+                                             max_features=5000)
+    tfidf_vect_ngram_chars.fit(train_df['text'])
+    xtrain_tfidf_ngram_chars = tfidf_vect_ngram_chars.transform(train_x)
+    xvalid_tfidf_ngram_chars = tfidf_vect_ngram_chars.transform(valid_x)
+
+    ''' load the pre-trained word-embedding vectors
+    # nesse carregamento de vetor, verificar como passar o texto das ementas
+    #
+    # A word embedding is a form of representing words and documents using a dense vector representation. The
+    # position of a word within the vector space is learned from text and is based on the words that surround the
+    # word when it is used. Word embeddings can be trained using the input corpus itself or can be generated using
+    # pre-trained word embeddings such as Glove, FastText, and Word2Vec. Any one of them can be downloaded and used
+    # as transfer learning. One can read more about word embeddings here.
+    #
+    # Following snnipet shows how to use pre-trained word embeddings in the model. There are four essential steps:
+    #
+    # Loading the pretrained word embeddings
+    # Creating a tokenizer object
+    # Transforming text documents to sequence of tokens and pad them
+    # Create a mapping of token and their respective embeddings
+    # see link https://www.analyticsvidhya.com/blog/2017/06/word-embeddings-count-word2veec/
+
+    # train a LDA Model
+    '''
+    lda_model = decomposition.LatentDirichletAllocation(n_components=20, learning_method='online', max_iter=20)
+    x_topics = lda_model.fit_transform(xtrain_count)
+    topic_word = lda_model.components_
+    vocab = count_vect.get_feature_names()
+
+    # view the topic models
+    n_top_words = 10
+    topic_summaries = []
+    for i, topic_dist in enumerate(topic_word):
+        topic_words = numpy.array(vocab)[numpy.argsort(topic_dist)][:-(n_top_words + 1):-1]
+        topic_summaries.append(' '.join(topic_words))
+
+    # Naive Bayes on Count Vectors
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_count, train_y, xvalid_count, valid_y)
+    print("NB, Count Vectors: ", accuracy)
+
+    # Naive Bayes on Word Level TF IDF Vectors
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
+    print("NB, WordLevel TF-IDF: ", accuracy)
+
+    # Naive Bayes on Ngram Level TF IDF Vectors
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+    print("NB, N-Gram Vectors: ", accuracy)
+
+    # Naive Bayes on Character Level TF IDF Vectors
+    accuracy = train_model(naive_bayes.MultinomialNB(), xtrain_tfidf_ngram_chars, train_y, xvalid_tfidf_ngram_chars,
+                           valid_y)
+    print("NB, CharLevel Vectors: ", accuracy)
+
+    # Linear Classifier on Count Vectors
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_count, train_y, xvalid_count, valid_y)
+    print("LR, Count Vectors: ", accuracy)
+
+    # Linear Classifier on Word Level TF IDF Vectors
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
+    print("LR, WordLevel TF-IDF: ", accuracy)
+
+    # Linear Classifier on Ngram Level TF IDF Vectors
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y)
+    print("LR, N-Gram Vectors: ", accuracy)
+
+    # Linear Classifier on Character Level TF IDF Vectors
+    accuracy = train_model(linear_model.LogisticRegression(), xtrain_tfidf_ngram_chars, train_y,
+                           xvalid_tfidf_ngram_chars, valid_y)
+    print("LR, CharLevel Vectors: ", accuracy)
+
+    # RF on Count Vectors
+    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_count, train_y, xvalid_count, valid_y)
+    print("RF, Count Vectors: ", accuracy)
+
+    # RF on Word Level TF IDF Vectors
+    accuracy = train_model(ensemble.RandomForestClassifier(), xtrain_tfidf, train_y, xvalid_tfidf, valid_y)
+    print("RF, WordLevel TF-IDF: ", accuracy)
+
+    classifier = create_model_architecture(xtrain_tfidf_ngram.shape[1])
+    accuracy = train_model(classifier, xtrain_tfidf_ngram, train_y, xvalid_tfidf_ngram, valid_y, is_neural_net=True)
+    print("NN, Ngram Level TF IDF Vectors", accuracy)
+
+    classifier = create_cnn(word_index, embedding_matrix)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
+    print("CNN, Word Embeddings", accuracy)
+
+    classifier = create_rnn_lstm(word_index, embedding_matrix)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
+    print("RNN-LSTM, Word Embeddings", accuracy)
+
+    classifier = create_rnn_gru(word_index, embedding_matrix)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
+    print("RNN-GRU, Word Embeddings", accuracy)
+
+    classifier = create_bidirectional_rnn(word_index, embedding_matrix)
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
+    print("RNN-Bidirectional, Word Embeddings", accuracy)
+
+    classifier = create_rcnn()
+    accuracy = train_model(classifier, train_seq_x, train_y, valid_seq_x, valid_y, is_neural_net=True)
+    print("CNN, Word Embeddings", accuracy)

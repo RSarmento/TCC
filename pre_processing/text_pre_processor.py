@@ -1,20 +1,11 @@
 import re
 from string import punctuation
 from unicodedata import normalize
-from nltk import RSLPStemmer
 
 import nltk
 import romanclass
 
 from nltk.corpus import stopwords
-
-
-def extract(data):
-    corpus = []
-    for i in data:
-        for j in i["elementos"]["Ementa"]:
-            corpus.append(j)
-    return corpus
 
 
 def remove_accents(corpus):
@@ -148,5 +139,40 @@ def to_lower(corpus):
     return lower
 
 
+def stringify(corpus):
+    stringified_corpus = []
+    for i in corpus:
+        stringified_corpus.append(' '.join(i))
+    return stringified_corpus
+
+
+# aplicar padrão builder e/ou otimizar os loops
+def init(corpus):
+    corpus = separete_words(corpus)
+    corpus = separete_numbers(corpus)
+    corpus = remove_special_characters(corpus)
+    corpus = roman_to_int(corpus)
+    corpus = to_lower(corpus)
+    corpus = replace_numbers(corpus)
+    corpus = remove_punctuation(corpus)
+    corpus = remove_blanks(corpus)
+    corpus = remove_stopwords(corpus)
+    corpus = remove_accents(corpus)
+    corpus = stemming(corpus)
+    return corpus
+
+
+# Método que vai ser transferido para classe de processamento em sí
+def dictionary(corpus):
+    dictio = []
+    return dictio
+
+
 class PreProcessor:
+    def __init__(self, corpus):
+        self.corpus = corpus
+
+    def __str__(self):
+        return self.corpus
+
     pass
