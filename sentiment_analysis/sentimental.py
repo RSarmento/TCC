@@ -3,7 +3,7 @@
 # Definir conjuntos de palavras que, caso estejam contidas no acórdão, serão consideradas como aceitas
 # ou não
 def sentiment(acordaos):
-    rejeitados = ['rejeit', 'neg']
+    rejeitados = ['rejeit', 'neg', 'indefer']
     acordaos_boo = []
     for i in acordaos:
         boo = True
