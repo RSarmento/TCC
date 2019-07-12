@@ -18,9 +18,9 @@ class Processor:
 
     def sem_spec_carac(self):
         list_i = []
-        list_superscript = regex = r"[\u006E\u00B0\u00B2\u00B3\u00B9\u02AF\u0670\u0711\u2121\u213B\u2207\u29B5\uFC5B-\uFC5D\uFC63\uFC90\uFCD9\u2070\u2071\u2074-\u208E\u2090-\u209C\u0345\u0656\u17D2\u1D62-\u1D6A\u2A27\u2C7C]+"
+        # lista de caracteres em superscript: \u00A0 até \u00BF
         for i in self.corpus:
-            list_i.append(re.sub('\W+', ' ', i).replace(list_superscript, ''))
+            list_i.append(re.sub('\W+', ' ', i).replace('\u00AA', ''))
         return list_i
 
     def separete_words(self):
