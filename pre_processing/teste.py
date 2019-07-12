@@ -13,5 +13,5 @@ for i in data:
     ementas.append(' '.join(ementa))
 
 ementasProcess = Processor(ementas)
-ementas_sem_spec_carac = ementasProcess.sem_spec_carac()
+ementas_sem_spec_carac = ementasProcess.clean()
 print(ementas_sem_spec_carac)

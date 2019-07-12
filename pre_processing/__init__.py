@@ -1,10 +1,7 @@
 import json
 
-import pandas as pd
-
 from pre_processing.processor import Processor
 from pre_processing.text_pre_processor import init, dictionary, stringify
-from sentiment_analysis.sentimental import sentiment
 
 # Carregando corpus não tratado
 with open('../data/output.json') as processo:
@@ -21,13 +18,11 @@ for i in data:
 for i in data:
     for j in i["elementos"]["Acórdão"]:
         acordaos.append(j)
-#
-# acordaosProcess = Processor(acordaos)  re.sub(regex, ' ', i)
-# acordaosProcess.process()
-# acordaos_boos = sentiment(acordaosProcess.corpus)
+
+
 
 ementasProcess = Processor(ementas)
-ementas_sem_spec_carac = ementasProcess.sem_spec_carac()
+ementas_sem_spec_carac = ementasProcess.clean()
 print(ementas_sem_spec_carac)
 
 #
