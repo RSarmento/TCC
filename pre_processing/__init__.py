@@ -22,7 +22,7 @@ for i in data:
 
 
 ementasProcess = Processor(ementas)
-ementas_sem_spec_carac = ementasProcess.clean()
+ementas_sem_spec_carac = ementasProcess.sem_spec_carac()
 print(ementas_sem_spec_carac)
 
 #

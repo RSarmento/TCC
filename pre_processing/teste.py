@@ -8,7 +8,7 @@ with open('../data/output.json') as processo:
 ementas = []
 for i in data:
     ementa = []
-    for j in i["elementos"]["Ementa"]:
+    for j in i["elementos"]["Ementa"]
         ementa.append(j)
     ementas.append(' '.join(ementa))
 

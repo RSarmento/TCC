@@ -5,7 +5,7 @@ from pre_processing.processor import Processor
 from pre_processing.text_pre_processor import init, dictionary, stringify
 
 # Carregando corpus não tratado
-from sentiment_analysis.sentimental import sentiment
+from sentiment_analysis.sentimental import sentiment_analysis
 from text_classifier.classifier import classify
 from text_classifier.model_trainer import trainer
 
@@ -28,7 +28,7 @@ for i in data:
 
 acordaosProcess = Processor(acordaos)
 acordaosProcess.process()
-acordaos_boos = sentiment(acordaosProcess.corpus)
+acordaos_boos = sentiment_analysis(acordaosProcess.corpus)
 
 tabela = {'resultado': acordaos_boos, 'ementa': ementas}
 

@@ -16,6 +16,13 @@ class Processor:
     def __str__(self):
         return self.corpus
 
+    def sem_spec_carac(self):
+        list_i = []
+        # lista de caracteres em superscript: \u00A0 até \u00BF
+        for i in self.corpus:
+            list_i.append(re.sub('\W+', ' ', i).replace('\u00AA', ''))
+        return list_i
+
     def separete_words(self):
         text_separete_words = []
         for i in self.corpus:
