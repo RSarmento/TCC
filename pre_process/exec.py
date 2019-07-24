@@ -2,6 +2,7 @@ import json
 import re
 
 import pandas as pd
+from unidecode import unidecode
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 
@@ -20,7 +21,7 @@ def load():
             ementa.append(j)
         ementas.append(' '.join(ementa))
 
-    return [ementas, acordaos]
+    return [acordaos, ementas]
 
 
 def clean(corpus):
@@ -30,7 +31,7 @@ def clean(corpus):
         words = doc.lower()
         numberless = re.sub(r'\d', '', words)
         superscriptless = re.sub(r'[\u00A0-\u00BF]*', '', numberless)
-        words_only = re.sub(r'\W+', ' ', superscriptless).replace('  ', '')
+        words_only = unidecode(re.sub(r'\W+', ' ', superscriptless))
         stopwordless_words = [word for word in words_only.split() if word not in stopwords.words('portuguese')]
         stemmed_words = [stemmer.stem(word) for word in stopwordless_words]
         docs.append(' '.join(stemmed_words))
@@ -40,3 +41,10 @@ def clean(corpus):
 def save(dataset):
     df = pd.DataFrame(dataset, columns=['resultado', 'ementa'])
     df.to_csv(r'../data/dataset_tratado.txt', sep='\t', index=None, header=False)
+
+
+def classes(corpus):
+    docs = []
+    for doc in corpus:
+        docs.append(doc.partition('.'))
+    return docs
