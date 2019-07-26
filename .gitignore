@@ -4,3 +4,11 @@
 hora_flexivel/
 
 venv/
+
+sentiment_analysis/__pycache__/
+
+pre_process/__pycache__/
+
+\.ipynb_checkpoints/
+
+*.pyc

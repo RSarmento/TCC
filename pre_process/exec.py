@@ -4,6 +4,9 @@ import re
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
+from unidecode import unidecode
+
+from pre_process import roman
 
 
 def load():
@@ -23,33 +26,12 @@ def load():
     return [acordaos, ementas]
 
 
-def roman_to_int(doc):
-    import romanclass
-
-    doc
-    new_corpus = []
-    for i in doc:
-        wordlist = []
-        for j in i:
-            if j in roman:
-                wordlist.append(str(romanclass.fromRoman(j)))
-            else:
-                wordlist.append(j)
-        new_corpus.append(wordlist)
-    corpus = new_corpus
-    return doc
-
-
 def clean(corpus):
     docs = list()
-    roman = ["MMM", "MM", "M",
-             "CM", "DCCC", "DCC", "DC", "D", "CD", "CCC", "CC", "C",
-             "XC", "LXXX", "LXX", "LX", "L", "XL", "XXX", "XX", "X",
-             "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"]
     stemmer = SnowballStemmer("portuguese")
     for doc in corpus:
-        pointless = re.sub('.', ' ', doc) # ERRADO AQUIIIIIIIIIIIIIIIIIIIIIIIIIII
-        romanless = re.sub(roman, ' ', pointless)
+        pointless = re.sub(r'[^\w\s]', '', doc).lower()
+        romanless = ' '.join([word for word in pointless.split() if word not in roman.roman])
         words = romanless.lower()
         numberless = re.sub(r'\d', '', words)
         superscriptless = re.sub(r'[\u00A0-\u00BF]*', '', numberless)
@@ -63,6 +45,11 @@ def clean(corpus):
 def save(dataset):
     df = pd.DataFrame(dataset, columns=['resultado', 'ementa'])
     df.to_csv(r'../data/dataset_tratado.txt', sep='\t', index=None, header=False)
+
+
+def save_ementas(ementas):
+    df = pd.DataFrame(ementas, columns=['ementa'])
+    df.to_csv(r'../data/ementas.txt', sep='\t', index='None', header=False)
 
 
 def classes(corpus):
