@@ -1,7 +1,3 @@
-from nltk import SklearnClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-
 import pre_process.exec as pp
 import sentiment_analysis.sentimental as s
 
@@ -21,6 +17,3 @@ dataset = {'resultado': s.sentiment_analysis(acordao_pp), 'ementa': ementa_pp}
 pp.save_dataset(dataset)
 
 print('done.')
-
-RandomForestClassifier(n_estimators=1000, random_state=0)
-KNeighborsClassifier
