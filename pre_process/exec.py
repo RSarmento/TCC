@@ -64,3 +64,13 @@ def save(dataset, title, file):
 def save_dataset(dataset):
     df = pd.DataFrame(dataset, columns=['resultado', 'ementa'])
     df.to_csv(r'../data/dataset_tratado.txt', sep='\t', index=None, header=False)
+
+
+def save_ementas(ementas):
+    df = pd.DataFrame(ementas, columns=['ementa'])
+    df.to_csv(r'../data/ementas.txt', sep='\t', index='None', header=False)
+
+
+def save_dataset_classes(dataset):
+    df = pd.DataFrame(dataset, columns=['classe', 'ementa'])
+    df.to_csv(r'../data/dataset_classes.txt', sep='\t', index=None, header=False)
