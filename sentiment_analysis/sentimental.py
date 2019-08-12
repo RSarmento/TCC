@@ -17,5 +17,8 @@ import re
 def sentiment_analysis(corpus):
     resultados = []
     for doc in corpus:
-        resultados.append(not any(re.findall(r'rejeit|neg|indefer', doc)))
+        if doc:
+            resultados.append(not any(re.findall(r'rejeit|neg|indefer', doc)))
+        else:
+            resultados.append(False)
     return resultados
