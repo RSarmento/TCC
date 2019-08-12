@@ -1,4 +1,3 @@
-import gc
 import json
 import re
 import time
@@ -7,6 +6,7 @@ import nltk
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
+
 from unidecode import unidecode
 
 from pre_process import roman
@@ -29,7 +29,7 @@ def load():
 
 
 def get_classes(docs):
-    print('Getting classes at {}\n'.format(time.process_time()))
+    print('Getting classes {}\n'.format(time.process_time()))
     new_corpus = []
     all_classes = []
     for doc in docs:
@@ -56,7 +56,7 @@ def get_bow(docs):
 
 
 def clean_classes(classes):
-    print('Scrapping classes at {}'.format(time.process_time()))
+    print('Scrapping classes {}'.format(time.process_time()))
     new_classes = []
     bow = get_bow(classes)
     top_words = nltk.FreqDist(bow).most_common(10)
@@ -74,7 +74,7 @@ def clean_classes(classes):
 
 
 def remove_subthemes(docs):
-    print('Scrapping subthemes from ementas at {}'.format(time.process_time()))
+    print('Scrapping sub themes from ementas {}'.format(time.process_time()))
     pattern = r'\b[A-Z\u00C0-\u00DC[\-*\w+]*]*[a-z\u00E0-\u00FC]*\b\s\b[a-z\u00E0-\u00FC]+\b'
     new_docs = []
     for i in range(len(docs)):
@@ -94,12 +94,12 @@ def remove_subthemes(docs):
 
 
 def clean(docs):
-    print('Scrapping data at {}'.format(time.process_time()))
+    print('Scrapping data {}'.format(time.process_time()))
     new_docs = list()
     stemmer = SnowballStemmer("portuguese")
     for i in range(len(docs)):
-        if i % 10000 == 0:
-            save(new_docs, ['ementas'], 'big_ementas')
+        # if i % 160000 == 0:
+        #     save(new_docs, ['ementas'], 'big_ementas')
         doc = docs[i]
         # process = re.sub('PROCESSUAL', 'PROCESS', doc)
         pointless = re.sub(r'[^\w\s]', '', doc).lower()
@@ -115,54 +115,35 @@ def clean(docs):
 
 
 def save(dataset, title, file):
-    print('Saving ' + file + ' at {}'.format(time.process_time()))
+    print('Saving ' + file + ' {}'.format(time.process_time()))
     df = pd.DataFrame(dataset, columns=title)
-    df.to_csv(r'../data/big/' + file + '.txt', sep='\t', index=None, header=False)
+    df.to_csv(r'../data' + file + '.txt', sep='\t', index=None, header=False)
     print('done in {}\n'.format(time.process_time()))
 
 
 def save_dataset(dataset):
-    print('Saving binary dataset at {}'.format(time.process_time()))
+    print('Saving dataset {}'.format(time.process_time()))
     df = pd.DataFrame(dataset, columns=['resultado', 'ementa'])
-    df.to_csv(r'../data/big/dataset_binary.txt', sep='\t', index=None, header=False)
+    df.to_csv(r'../data/dataset_binary.txt', sep='\t', index=None, header=False)
     print('done in {}\n'.format(time.process_time()))
 
 
 def save_dataset_classes(dataset):
-    print('Saving big_dataset_multi at {}'.format(time.process_time()))
+    print('Saving big_dataset_multi {}'.format(time.process_time()))
     df = pd.DataFrame(dataset, columns=['classe', 'ementa'])
-    df.to_csv(r'../data/big/dataset_multi.txt', sep='\t', index=None, header=False)
+    df.to_csv(r'../data/dataset_multi.txt', sep='\t', index=None, header=False)
     print('done in {}\n'.format(time.process_time()))
 
 
 def load_big():
-
+    print('Loading ementas {}'.format(time.process_time()))
     with open('../data/big_ementas_raw.txt') as f:
         ementas = f.readlines()
-    print('done in {}\n'.format(time.process_time()))
+    print('done {}\n'.format(time.process_time()))
 
+    print('Loading acordaos {}'.format(time.process_time()))
     with open('../data/big/big_acordaos.txt') as f:
-        acordao_pp = f.readlines()
+        acordaos = f.readlines()
+    print('done {}\n'.format(time.process_time()))
 
-    classes_raw, ementa_pp = get_classes(ementas)
-    classes = clean(classes_raw)
-
-    del classes_raw, ementas
-    gc.collect()
-
-    save(classes, ['classes'], 'big_classes')
-    classes = clean_classes(classes)
-    save(classes, ['classes'], 'big_classes_reduced')
-
-    ementa_pp = remove_subthemes(ementa_pp)
-    ementa_pp = clean(ementa_pp)
-    save(ementa_pp, ['ementas'], 'big_ementas')
-
-    dataset = {'resultado': acordao_pp, 'ementa': ementa_pp}
-    save_dataset(dataset)
-
-    del acordao_pp
-    gc.collect()
-
-    dataset = {'classe': classes, 'ementa': ementa_pp}
-    save_dataset_classes(dataset)
+    return acordaos, ementas
