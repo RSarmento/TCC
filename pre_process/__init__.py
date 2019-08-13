@@ -1,50 +1,29 @@
-import pre_process.exec as pp
-import sentiment_analysis.sentimental as s
 
+import pre_process.files.loads as loader
+import pre_process.files.saves as saver
+import pre_process.exec_pre_process as pp
 
-# ementas_acordaos = pp.load()
-#
-# classes_raw, ementas_acordaos[1] = pp.get_classes(ementas_acordaos[1])
-# # pp.save(classes_raw, ['classes'], 'classes_raw')
-#
-# classes = pp.clean(classes_raw)
-# classes = pp.clean_classes(classes)
-# # pp.save(classes, ['classes'], 'classes')
-#
-# # pp.save(ementas_acordaos[1], ['ementas'], 'ementas')
-#
-# acordao_pp = pp.clean(ementas_acordaos[0])
-# acordao_pp = s.sentiment_analysis(acordao_pp)
-# ementa_pp = pp.remove_subthemes(ementas_acordaos[1])
-# ementa_pp = pp.clean(ementa_pp)
-# pp.save(ementa_pp, ['ementas'], 'ementas_sem_temas')
-#
-# dataset = {'resultado': acordao_pp, 'ementa': ementa_pp}
-# pp.save_dataset(dataset)
-#
-# dataset = {'classe': classes, 'ementa': ementa_pp}
-# pp.save_dataset_classes(dataset)
+acordaos = loader.load_big_acordaos()
+ementas = loader.load_big_ementas()
 
-acordaos, ementas = pp.load_big()
 classes, ementas = pp.get_classes(ementas)
-classes = pp.clean(classes)
+classes = pp.scrap_docs(classes)
+saver.save_big(classes, ['classes'], 'big_classes')
+classes = pp.scrap_classes(classes)
+saver.save_big(classes, ['classes'], 'big_classes_reduced')
 
-pp.save(classes, ['classes'], 'big_classes')
-classes = pp.clean_classes(classes)
-pp.save(classes, ['classes'], 'big_classes_reduced')
+acordaos = pp.scrap_docs(acordaos)
+acordaos = pp.sentiment_analysis(acordaos)
+saver.save_big(acordaos, ['acordaos'], 'big_acordaos')
 
-acordaos = pp.clean(acordaos)
-acordaos = s.sentiment_analysis(acordaos)
-pp.save(acordaos, ['acordaos'], 'big_acordaos')
-
-ementas = pp.remove_subthemes(ementas)
-ementas = pp.clean(ementas)
-pp.save(ementas, ['ementas'], 'big_ementas')
+ementas = pp.remove_subclasses(ementas)
+ementas = pp.scrap_docs(ementas)
+saver.save_big(ementas, ['ementas'], 'big_ementas')
 
 dataset = {'resultado': acordaos, 'ementa': ementas}
-pp.save_dataset(dataset)
+saver.save_big_dataset_binary(dataset)
 
 dataset = {'classe': classes, 'ementa': ementas}
-pp.save_dataset_classes(dataset)
-#
+saver.save_big_dataset_multi(dataset)
+
 print('all done.')
