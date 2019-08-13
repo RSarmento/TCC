@@ -13,6 +13,7 @@ def get_classes(docs):
     new_corpus = []
     all_classes = []
     for doc in docs:
+        # VER POR QUE DÁ ERRO SE TENTAR REMOVER A CLASSE ANTES DE TRANSFORMAR PARA UNICODE
         ementa_defeituosa = re.sub("E M E N T A", "EMENTA", doc)
         classes = re.sub('-', '.', re.sub('', '.', ementa_defeituosa).partition('.')[0]).partition('.')[0]
         classes = unidecode(re.sub(r'\W+', ' ', classes))
