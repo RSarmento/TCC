@@ -1,12 +1,11 @@
 import time
-
 import pandas as pd
 
 
 def save(dataset, title, file):
     print('Saving ' + file + ' {}'.format(time.process_time()))
     df = pd.DataFrame(dataset, columns=title)
-    df.to_csv(r'../data' + file + '.txt', sep='\t', index=None, header=False)
+    df.to_csv(r'../data/' + file + '.txt', sep='\t', index=None, header=False)
     print('done in {}\n'.format(time.process_time()))
 
 
