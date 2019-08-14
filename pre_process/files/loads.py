@@ -28,7 +28,7 @@ def load_ementas():
 
 def load_big_ementas():
     print('Loading ementas {}'.format(time.process_time()))
-    with open('../data/ementas_raw.txt') as f:
+    with open('../data/big/big_ementas_raw.txt') as f:
         ementas = f.readlines()
     print('done {}\n'.format(time.process_time()))
     return ementas

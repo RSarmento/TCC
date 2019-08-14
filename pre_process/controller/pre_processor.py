@@ -10,21 +10,26 @@ from unidecode import unidecode
 
 def get_classes(docs):
     print('Getting classes {}\n'.format(time.process_time()))
-    new_corpus = []
-    all_classes = []
-    for doc in docs:
-        classe = re.sub("E M E N T A", "EMENTA", doc)
-        classe = re.sub('[-()]', '.', classe).partition('.')[0]
-        new_corpus.append(re.sub(classe, '', doc))
-        classe = unidecode(re.sub(r'\W+', ' ', classe))
-        classe = classe.partition(' EM ')[0]
-        classe = classe.partition(' E ')[0]
-        classe = classe.partition(' NO ')[0]
-        classe = classe.partition(' NA ')[0]
-        classe = re.sub('PROCESSUAL', 'PROCESS', classe)
-        all_classes.append(classe)
+    pattern = r'\b[A-Z\u00C0-\u00DC[\-*\w+]*]*[a-z\u00E0-\u00FC]*\b\s\b[a-z\u00E0-\u00FC]+\b'
+    new_docs = []
+    full_classes = []
+    for i in range(len(docs)):
+        full_classes.append('outros')
+        if docs[i]:
+            doc = re.sub('-', ' ', docs[i])
+            first_lowercase_word = re.findall(pattern, doc)
+            if first_lowercase_word:
+                first_lowercase_word_index = doc.find(first_lowercase_word[0])
+                if first_lowercase_word_index - 1 >= 0:
+                    full_classes[i] = docs[i][0:first_lowercase_word_index - 1]
+                    new_docs.append(docs[i][first_lowercase_word_index - 1:])
+                else:
+                    full_classes[i] = docs[i]
+                    new_docs.append(docs[i][first_lowercase_word_index:])
+            else:
+                new_docs.append('x')
     print('done in {}\n'.format(time.process_time()))
-    return all_classes, new_corpus
+    return full_classes, new_docs
 
 
 def scrap_classes(docs):
@@ -45,6 +50,20 @@ def scrap_classes(docs):
     return new_classes
 
 
+def group_classes(novas, classes_existentes):
+    print('Grouping classes {}'.format(time.process_time()))
+    grouped_classes = []
+    for i in range(len(novas)):
+        classe = novas[i]
+        grouped_classes.append('outros')
+        for classe_existente in classes_existentes:
+            if classe_existente.lower() in classe.lower():
+                grouped_classes[i] = classe_existente.lower()
+                break
+    print('done in {}\n'.format(time.process_time()))
+    return grouped_classes
+
+
 def get_bag_of_words(docs):
     bow = []
     for doc in docs:
@@ -53,24 +72,27 @@ def get_bag_of_words(docs):
     return bow
 
 
-def remove_subclasses(docs):
-    print('Scrapping sub themes from ementas {}'.format(time.process_time()))
-    pattern = r'\b[A-Z\u00C0-\u00DC[\-*\w+]*]*[a-z\u00E0-\u00FC]*\b\s\b[a-z\u00E0-\u00FC]+\b'
-    new_docs = []
-    for i in range(len(docs)):
-        if docs[i]:
-            doc = re.sub('-', ' ', docs[i])
-            first_lowercase_word = re.findall(pattern, docs[i])
-            if first_lowercase_word:
-                first_lowercase_word_index = docs[i].find(first_lowercase_word[0])
-                if first_lowercase_word_index - 1 >= 0:
-                    new_docs.append(docs[i][first_lowercase_word_index - 1:])
-                else:
-                    new_docs.append(docs[i][first_lowercase_word_index:])
-            else:
-                new_docs.append('x')
-    print('done in {}\n'.format(time.process_time()))
-    return new_docs
+# def remove_subclasses(docs):
+#     print('Scrapping sub themes from ementas {}'.format(time.process_time()))
+#     pattern = r'\b[A-Z\u00C0-\u00DC[\-*\w+]*]*[a-z\u00E0-\u00FC]*\b\s\b[a-z\u00E0-\u00FC]+\b'
+#     new_docs = []
+#     full_classes = []
+#     for i in range(len(docs)):
+#         if docs[i]:
+#             doc = re.sub('-', ' ', docs[i])
+#             first_lowercase_word = re.findall(pattern, doc)
+#             if first_lowercase_word:
+#                 first_lowercase_word_index = docs[i].find(first_lowercase_word[0])
+#                 if first_lowercase_word_index - 1 >= 0:
+#                     full_classes.append(docs[i][0:first_lowercase_word_index - 2])
+#                     new_docs.append(docs[i][first_lowercase_word_index - 1:])
+#                 else:
+#                     full_classes.append(docs[i][0:first_lowercase_word_index])
+#                     new_docs.append(docs[i][first_lowercase_word_index:])
+#             else:
+#                 new_docs.append('x')
+#     print('done in {}\n'.format(time.process_time()))
+#     return full_classes, new_docs
 
 
 def scrap_docs(docs):

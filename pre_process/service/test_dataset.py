@@ -1,6 +1,7 @@
 import pre_process.files.loads as loader
 import pre_process.files.saves as saver
 import pre_process.controller.pre_processor as pp
+from pre_process.str.classes import classes_existentes
 
 
 def run():
@@ -8,7 +9,7 @@ def run():
     ementas = loader.load_ementas()
 
     classes, ementas = pp.get_classes(ementas)
-    # classes = pp.scrap_docs(classes)
+    classes = pp.group_classes(classes, classes_existentes)
     saver.save(classes, ['classes'], 'classes')
     classes = pp.scrap_classes(classes)
     saver.save(classes, ['classes'], 'classes_reduced')
@@ -17,7 +18,6 @@ def run():
     acordaos = pp.sentiment_analysis(acordaos)
     saver.save(acordaos, ['acordaos'], 'acordaos')
 
-    ementas = pp.remove_subclasses(ementas)
     ementas = pp.scrap_docs(ementas)
     saver.save(ementas, ['ementas'], 'ementas')
 

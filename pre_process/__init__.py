@@ -1,4 +1,5 @@
-from pre_process.service import test_dataset, big_dataset
+import pre_process.service.big_dataset as big
+import pre_process.service.test_dataset as test
 
-test_dataset.run()
-# big_dataset.run()
+# test.run()
+big.run()
