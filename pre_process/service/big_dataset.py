@@ -9,9 +9,10 @@ def run():
     ementas = loader.load_big_ementas()
 
     classes, ementas = pp.get_classes(ementas)
-    classes = pp.group_classes(classes, classes_existentes)
-    saver.save_big(classes, ['classes'], 'big_classes')
+    # classes = pp.group_classes(classes, classes_existentes)
     classes = pp.scrap_classes(classes)
+    saver.save_big(classes, ['classes'], 'big_classes')
+    classes = pp.scrap_docs(classes)
     saver.save_big(classes, ['classes'], 'big_classes_reduced')
 
     acordaos = pp.scrap_docs(acordaos)

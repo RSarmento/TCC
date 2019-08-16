@@ -33,14 +33,16 @@ def get_classes(docs):
 
 
 def scrap_classes(docs):
+    docs = scrap_docs(docs)
     print('Scrapping classes {}'.format(time.process_time()))
     new_classes = []
     bow = get_bag_of_words(docs)
-    top_words = nltk.FreqDist(bow).most_common(10)
+    top_words = nltk.FreqDist(bow).most_common(20)
     new_top_words = []
     for word in top_words:
         new_top_words.append(word[0])
     for classe in docs:
+        local_top_words = nltk.FreqDist(classe.split())
         top_class = set(new_top_words).intersection(classe.split())
         if top_class:
             new_classes.append(top_class.pop())

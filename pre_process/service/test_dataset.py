@@ -9,10 +9,10 @@ def run():
     ementas = loader.load_ementas()
 
     classes, ementas = pp.get_classes(ementas)
-    classes = pp.group_classes(classes, classes_existentes)
-    saver.save(classes, ['classes'], 'classes')
-    classes = pp.scrap_classes(classes)
-    saver.save(classes, ['classes'], 'classes_reduced')
+    classes_referencia = pp.group_classes(classes, classes_existentes)
+    saver.save(classes_referencia, ['classes'], 'classes_referencia')
+    classes_dez_mais = pp.scrap_classes(classes)
+    saver.save(classes_dez_mais, ['classes'], 'classes_dez_mais')
 
     acordaos = pp.scrap_docs(acordaos)
     acordaos = pp.sentiment_analysis(acordaos)
@@ -24,7 +24,10 @@ def run():
     dataset = {'resultado': acordaos, 'ementa': ementas}
     saver.save_dataset_binary(dataset)
 
-    dataset = {'classe': classes, 'ementa': ementas}
-    saver.save_dataset_multi(dataset)
+    dataset = {'classe': classes_referencia, 'ementa': ementas}
+    saver.save_dataset_multi(dataset, 'dataset_classes_referencia')
+
+    dataset = {'classe': classes_dez_mais, 'ementa': ementas}
+    saver.save_dataset_multi(dataset, 'dataset_classes_dez_mais')
 
     print('all done.')

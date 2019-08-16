@@ -16,10 +16,10 @@ def save_dataset_binary(dataset):
     print('done in {}\n'.format(time.process_time()))
 
 
-def save_dataset_multi(dataset):
+def save_dataset_multi(dataset, file):
     print('Saving dataset_multi {}'.format(time.process_time()))
     df = pd.DataFrame(dataset, columns=['classe', 'ementa'])
-    df.to_csv(r'../data/dataset_multi.txt', sep='\t', index=None, header=False)
+    df.to_csv(r'../data/' + file + '.txt', sep='\t', index=None, header=False)
     print('done in {}\n'.format(time.process_time()))
 
 
