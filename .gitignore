@@ -14,3 +14,5 @@ pre_process/__pycache__/
 *.pyc
 
 data/
+
+*.model
