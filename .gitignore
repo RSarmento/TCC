@@ -12,3 +12,7 @@ pre_process/__pycache__/
 \.ipynb_checkpoints/
 
 *.pyc
+
+data/
+
+*.model
